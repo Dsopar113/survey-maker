@@ -1,0 +1,42 @@
+﻿@using WebApp1.ViewModels
+@model SurveyQuestionViewModel
+
+@{
+    var sectionIndex = ViewBag.SectionIndex ?? 0;
+    var questionIndex = ViewBag.QuestionIndex ?? 0;
+}
+
+<div class="border p-3 mt-4" id="question-@sectionIndex-@questionIndex">
+    <div class="mb-3 row align-items-center">
+
+        <div class="col-auto pe-0">
+            <p class="fw-bold mb-0 ">@(sectionIndex + 1).@(questionIndex + 1).</p>
+        </div>
+        <div class="col">
+            <textarea asp-for="QuestionContent" class="form-control" name="SurveySections[@ViewBag.SectionIndex].SurveyQuestions[@ViewBag.QuestionIndex].QuestionContent"></textarea>
+        </div>
+        <div class="d-flex align-items-center">
+            <div class="me-3">
+                <input asp-for="Option" type="radio" id="option-one-@sectionIndex-@questionIndex" name="SurveySections[@sectionIndex].SurveyQuestions[@questionIndex].Option" value="StronglyDisagree" />
+                <label for="option-one-@sectionIndex-@questionIndex">Strongly Disagree</label>
+            </div>
+            <div class="me-3">
+                <input asp-for="Option" type="radio" id="option-two-@sectionIndex-@questionIndex" name="SurveySections[@sectionIndex].SurveyQuestions[@questionIndex].Option" value="Disagree" />
+                <label for="option-two-@sectionIndex-@questionIndex">Disagree</label>
+            </div>
+            <div class="me-3">
+                <input asp-for="Option" type="radio" id="option-three-@sectionIndex-@questionIndex" name="SurveySections[@sectionIndex].SurveyQuestions[@questionIndex].Option" value="Neutral" />
+                <label for="option-three-@sectionIndex-@questionIndex">Neutral</label>
+            </div>
+            <div class="me-3">
+                <input asp-for="Option" type="radio" id="option-four-@sectionIndex-@questionIndex" name="SurveySections[@sectionIndex].SurveyQuestions[@questionIndex].Option" value="Agree" />
+                <label for="option-four-@sectionIndex-@questionIndex">Agree</label>
+            </div>
+            <div class="me-3">
+                <input asp-for="Option" type="radio" id="option-five-@sectionIndex-@questionIndex" name="SurveySections[@sectionIndex].SurveyQuestions[@questionIndex].Option" value="StronglyAgree" />
+                <label for="option-five-@sectionIndex-@questionIndex">Strongly Agree</label>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,43 @@
+﻿@using WebApp1.ViewModels
+@model SurveyHeaderViewModel
+@{
+    var index = 0;
+}
+<style>
+    .no-resize {
+        resize: none;
+    }
+</style>
+<form asp-action="Fill" method="post">
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">Fill Survey</h2>
+            <hr />
+        </div>
+        <div class="mb-3 row">
+            <input asp-for="SurveyName" type="text" class="form-control" readonly/>
+        </div>
+        <div class="mb-3 row">
+            @Html.TextAreaFor(model => model.SurveyDescription, new { @class = "form-control no-resize", @readonly = "readonly" })
+        </div>
+
+        <div id="sections-container">
+            @foreach (var item in Model.SurveySections)
+            {
+                ViewBag.SectionIndex = index;
+                <partial name="SurveyUserSectionPartial" model="item" />
+                index++;
+            }
+        </div>
+        <div class="row">
+            <div class="col-6 col-md-3">
+                <input type="submit" id="submit" value="Finished" class="btn btn-dark form-control" />
+            </div>
+            <div class="col-6 col-md-3">
+                <a asp-controller="SurveyUser" asp-action="Index" class="btn btn-secondary border form-control">
+                    Back To list
+                </a>
+            </div>
+        </div>
+    </div>
+</form>

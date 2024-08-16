@@ -1,0 +1,103 @@
+﻿@using WebApp1.ViewModels
+@model SurveyHeaderViewModel
+@{
+    var index = 0;
+}
+<form asp-action ="Edit" method="post">
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">Edit Survey</h2>
+            <hr />
+        </div>
+        <div class="mb-3 row">
+            <label>Survey Name</label>
+            <input asp-for="SurveyName" type="text" class="form-control" />
+            <span asp-validation-for="SurveyName" class="text-danger"></span>
+        </div>
+        <div class="mb-3 row">
+            <label>Survey Description</label>
+            @Html.TextAreaFor(model => model.SurveyDescription, new { @class = "form-control", rows = 2 })
+        </div>
+
+        <div id="sections-container">
+            <input type="hidden" />
+            @foreach (var item in Model.SurveySections)
+            {
+                ViewBag.SectionIndex = index;
+                <partial name="EditSurveySectionPartial" model="item"/>
+                index++;
+            }
+        </div>
+        <div class="row">
+            <div class="col-6 col-md-3">
+                <a id="add-section-button" asp-action="GetEditSurveySectionPartial" asp-controller="Survey" class="btn btn-success form-control">Add Section</a>
+            </div>
+            <div class="col-6 col-md-3">
+                <input type="submit" id="submit" value="Finished" class="btn btn-dark form-control" />
+            </div>
+            <div class="col-6 col-md-3">
+                <a asp-controller="Survey" asp-action="Index" class="btn btn-secondary border form-control">
+                    Back To list
+                </a>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            var sectionIndex = @index;
+            $("#submit").click(function (e) {
+                //e.preventDefault();
+                var formData = new FormData();
+
+                $("input[name='SectionName']").each(function (i) {
+                    var SectionName = $(this).val();
+                    formData.append("Sections[" + i + "].SectionName", SectionName);
+                });
+                $("input[name='SectionDescription']").each(function (i) {
+                    var SectionDescription = $(this).val();
+                    formData.append("Sections[" + i + "].SectionDescription", SectionDescription);
+                });
+
+                $.ajax({
+                    method: 'post',
+                    url: "Survey/Edit",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function () {
+
+                    }
+                });
+            });
+            $("#add-section-button").click(function () {
+                console.log(sectionIndex);
+                $.ajax({
+                    url: this.href,
+                    type: 'GET',
+                    data: { index: sectionIndex },
+                    cache: false,
+                    success: function (html) { $("#sections-container").append(html); }
+                }); sectionIndex++;
+                return false;
+            });
+
+            $("a.deleteRow").on("click", function () {
+                $(this).parents("div.editorRow:first").remove();
+                return false;
+            });
+            // $(document).on('click', '#add-question-button-@index', function () { 
+            //     debugger;
+            //     var sectionIndex = $(this).data('section-index');
+            //     var questionIndexField = $('#question-index-' + sectionIndex);
+            //     var questionIndex = parseInt(questionIndexField.val());
+            //     $.get('@Url.Action("GetEditSurveyQuestionPartial")', { sectionIndex: sectionIndex, questionIndex: questionIndex }, function (data) {
+            //         $('#questions-container-' + sectionIndex).append(data);
+            //         questionIndexField.val(questionIndex + 1);
+            //     });
+            // });
+        });
+    </script>
+}

@@ -1,0 +1,45 @@
+﻿@using WebApp1.ViewModels
+@model SurveySectionViewModel
+
+@{
+    var sectionIndex = ViewBag.SectionIndex ?? 0;
+}
+<div class="border p-3 mt-4" id="section-@sectionIndex">
+    <div class="mb-3 row">
+        <label>Section Name</label>
+        <input asp-for="SectionName" type="text" class="form-control" name = "SurveySections[@ViewBag.SectionIndex].SectionName"/>
+    </div>
+    <div class="mb-3 row">
+        <label>Section Description</label>
+        <textarea asp-for="SectionDescription" class="form-control" name="SurveySections[@ViewBag.SectionIndex].SectionDescription"></textarea>
+    </div>
+    <a href="#" class="deleteSection">Delete Section</a>
+
+    <!-- Placeholder for dynamically added questions -->
+    <div id="questions-container-@sectionIndex">
+        <input type="hidden" id="question-index-@sectionIndex" value="0" />
+        @foreach (var item in Model.SurveyQuestions)
+        {
+            <partial name="SurveyQuestionPartial" model="item" />
+        }
+    </div>
+    <div class="row">
+        <div class="col-6 col-md-3">
+            <button type="button" id="add-question-button-@sectionIndex"class="btn btn-success form-control" data-section-index="@sectionIndex">Add Question</button> 
+        </div>
+    </div> 
+</div>
+<script>
+    $(document).ready(function () {
+        $('#add-question-button-@sectionIndex').click(function () {
+            debugger;
+            var sectionIndex = $(this).data('section-index');
+            var questionIndexField = $('#question-index-' + sectionIndex);
+            var questionIndex = parseInt(questionIndexField.val());
+            $.get('@Url.Action("GetSurveyQuestionPartial")', { sectionIndex: sectionIndex, questionIndex: questionIndex }, function (data) {
+                $('#questions-container-' + sectionIndex).append(data);
+                questionIndexField.val(questionIndex + 1);
+            });
+        });
+    });
+</script> 

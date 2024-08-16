@@ -1,0 +1,14 @@
+﻿@using WebApp1.ViewModels
+@model SurveyQuestionViewModel
+
+@{
+    var sectionIndex = ViewBag.SectionIndex ?? 0;
+    var questionIndex = ViewBag.QuestionIndex ?? 0;
+}
+
+<div class="border p-3 mt-4" id="question-@sectionIndex-@questionIndex">
+    <div class="mb-3 row">
+        <label>Question Content</label>
+        <textarea asp-for="QuestionContent" class="form-control" name="SurveySections[@ViewBag.SectionIndex].SurveyQuestions[@ViewBag.QuestionIndex].QuestionContent"></textarea>
+    </div>
+</div>

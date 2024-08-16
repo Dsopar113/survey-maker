@@ -1,0 +1,35 @@
+﻿@using WebApp1.ViewModels
+@model SurveySectionViewModel
+
+@{
+    var qIndex = 0;
+    var sectionIndex = ViewBag.SectionIndex ?? 0;
+}
+<style>
+    .no-resize {
+        resize: none;
+    }
+</style>
+<div class="border p-3 mt-4" id="section-@sectionIndex">
+    <div class="row mb-3 align-items-center">
+        <div class="col-auto pe-0">
+            <p class="fw-bold mb-0">@(sectionIndex + 1).</p>
+        </div>
+        <div class="col">
+            <input asp-for="SectionName" type="text" class="form-control" name="SurveySections[@ViewBag.SectionIndex].SectionName" readonly />
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <textarea asp-for="SectionDescription" class="form-control no-resize" name="SurveySections[@ViewBag.SectionIndex].SectionDescription" readonly></textarea>
+    </div>
+    <!-- Placeholder for dynamically added questions -->
+    <div id="questions-container-@sectionIndex">
+        <input type="hidden" id="question-index-@sectionIndex" value="0" />
+        @foreach (var item in Model.SurveyQuestions)
+        {
+            ViewBag.QuestionIndex = qIndex;
+            <partial name="SurveyUserQuestionPartial" model="item" />
+            qIndex++;
+        }
+    </div>
+</div>
