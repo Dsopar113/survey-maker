@@ -9,10 +9,12 @@ namespace WebApp1.Models
         public string? SurveyName { get; set; }
         public string? SurveyDescription { get; set; }
         public IList<SurveySection> SurveySections { get; set; }
+        public IList<SurveyHeader_Participant> SurveyHeader_Participants { get; set; }
         public SurveyHeader()
         {
-            SurveyId = Guid.NewGuid();
+            //SurveyId = Guid.NewGuid();
             SurveySections = new List<SurveySection>();
+            SurveyHeader_Participants = new List<SurveyHeader_Participant>();
         }
     }
 }

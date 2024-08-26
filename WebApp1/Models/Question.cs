@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.CodeAnalysis.Options;
 
 namespace WebApp1.Models
 {
@@ -9,10 +8,10 @@ namespace WebApp1.Models
         public Guid QuestionId { get; set; }
         public string? QuestionContent { get; set; }
         public Guid SurveySectionId { get; set; }
-        public virtual IList<Option> Options { get; set; }
+        public int Answer {  get; set; }
         public Question()
         {
-            QuestionId = Guid.NewGuid();
+            //QuestionId = Guid.NewGuid();
         }
     }
 }

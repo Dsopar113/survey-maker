@@ -1,0 +1,28 @@
+﻿@using WebApp1.ViewModels
+@model SurveyParticipantViewModel
+
+<form method="post">
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">Add Participant</h2>
+            <hr />
+        </div>
+        <div class="mb-3 row">
+            <label>Participant e-mail</label>
+            <input asp-for="ParticipantEmail" type="email" class="form-control" />
+        </div>
+        <div class="mb-3 row">
+            <label>Participant first name</label>
+            <input asp-for="ParticipantFirstName" type="text" class="form-control" />
+        </div>
+        <div class="mb-3 row">
+            <label>Participant first name</label>
+            <input asp-for="ParticipantLastName" type="text" class="form-control" />
+        </div>
+        <div class="row">
+            <div class="col-6 col-md-3">
+                <input type="submit" id="submit" value="Add Participant" class="btn btn-dark form-control" />
+            </div>
+        </div>
+    </div>
+</form>

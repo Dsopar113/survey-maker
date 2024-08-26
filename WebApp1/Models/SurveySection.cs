@@ -11,7 +11,7 @@ namespace WebApp1.Models
         public Guid SurveyHeaderId { get; set; }
         public virtual IList<Question> Questions { get; set; }
         public SurveySection() { 
-            SurveySectionId = Guid.NewGuid();
+            //SurveySectionId = Guid.NewGuid();
         }
     }
 }

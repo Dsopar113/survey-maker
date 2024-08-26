@@ -9,12 +9,15 @@ namespace WebApp1.Controllers
     {
         private readonly ApplicationDbContext _db;
         public SurveyController(ApplicationDbContext db) { _db = db; }
+
         [HttpGet]
         public IActionResult Index()
         {
             List<SurveyHeader> objSurveyHeaderList = _db.SurveyHeaders.ToList();
             return View(objSurveyHeaderList);
         }
+
+        [HttpGet]
         public IActionResult Create()
         {
             var model = new SurveyHeaderViewModel()
@@ -23,7 +26,39 @@ namespace WebApp1.Controllers
             };
             return View(model);
         }
-        [HttpGet]
+
+		[HttpPost]
+		public async Task<IActionResult> Create(SurveyHeaderViewModel model)
+		{
+			if (ModelState.IsValid)
+			{
+				var surveyHeader = new SurveyHeader
+				{
+					SurveyName = model.SurveyName,
+					SurveyDescription = model.SurveyDescription,
+                    SurveyId = Guid.NewGuid(),
+					SurveySections = model.SurveySections.Select(s => new SurveySection
+					{
+						SectionName = s.SectionName,
+						SectionDescription = s.SectionDescription,
+                        SurveySectionId = Guid.NewGuid(),
+						Questions = s.SurveyQuestions.Select(q => new Question
+						{
+							QuestionContent = q.QuestionContent,
+                            QuestionId = Guid.NewGuid(),
+						}).ToList()
+					}).ToList()
+				};
+
+				// Save to database
+				_db.SurveyHeaders.Add(surveyHeader);
+				await _db.SaveChangesAsync();
+				return RedirectToAction("Index");
+			}
+			return View(model);
+		}
+
+		[HttpGet]
         public IActionResult GetSurveySectionPartial(int index)
         {
             ViewBag.SectionIndex = index;
@@ -33,7 +68,19 @@ namespace WebApp1.Controllers
             };
             return PartialView("SurveySectionPartial", model);
         }
-        [HttpGet]
+
+		[HttpGet]
+		public IActionResult GetEditSurveySectionPartial(int index)
+		{
+			ViewBag.SectionIndex = index;
+			var model = new SurveySectionViewModel()
+			{
+				SurveyQuestions = new List<SurveyQuestionViewModel>()
+			};
+			return PartialView("EditSurveySectionPartial", model);
+		}
+
+		[HttpGet]
         public IActionResult GetSurveyQuestionPartial(int sectionIndex, int questionIndex)
         {
             ViewBag.SectionIndex = sectionIndex;
@@ -41,16 +88,7 @@ namespace WebApp1.Controllers
             var model = new SurveyQuestionViewModel();
             return PartialView("SurveyQuestionPartial", model);
         }
-        [HttpGet]
-        public IActionResult GetEditSurveySectionPartial(int index)
-        {
-            ViewBag.SectionIndex = index;
-            var model = new SurveySectionViewModel()
-            {
-                SurveyQuestions = new List<SurveyQuestionViewModel>()
-            };
-            return PartialView("EditSurveySectionPartial", model);
-        }
+
         [HttpGet]
         public IActionResult GetEditSurveyQuestionPartial(int sectionIndex, int questionIndex)
         {
@@ -59,34 +97,8 @@ namespace WebApp1.Controllers
             var model = new SurveyQuestionViewModel();
             return PartialView("EditSurveyQuestionPartial", model);
         }
-        [HttpPost]
-        public async Task<IActionResult> Create(SurveyHeaderViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var surveyHeader = new SurveyHeader
-                {
-                    SurveyName = model.SurveyName,
-                    SurveyDescription = model.SurveyDescription,
-                    SurveySections = model.SurveySections.Select(s => new SurveySection
-                    {
-                        // Assuming SurveySectionViewModel has the same properties as SurveySection entity
-                        SectionName = s.SectionName,
-                        SectionDescription = s.SectionDescription,
-                        Questions = s.SurveyQuestions.Select(q => new Question
-                        {
-                            QuestionContent = q.QuestionContent
-                        }).ToList()
-                    }).ToList()
-                };
 
-                // Save to database
-                _db.SurveyHeaders.Add(surveyHeader);
-                await _db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
-            return View(model);
-        }
+        [HttpGet]
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -118,8 +130,9 @@ namespace WebApp1.Controllers
 
             return View(model);
         }
+
         [HttpPost]
-        public async Task<IActionResult> Update(SurveyHeaderViewModel model)
+        public async Task<IActionResult> Edit(SurveyHeaderViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -165,5 +178,33 @@ namespace WebApp1.Controllers
 
             return View(model);
         }
+
+        [HttpGet]
+        public IActionResult DeleteSurvey(Guid? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            SurveyHeader? surveyHeader = _db.SurveyHeaders.Find(id);
+            if (surveyHeader == null)
+            {
+                return NotFound();
+            }
+            return View(surveyHeader);
+        }
+
+        [HttpPost, ActionName("DeleteSurvey")]
+		public async Task<IActionResult> DeleteSURVEY(Guid? id)
+		{
+			SurveyHeader? obj = _db.SurveyHeaders.Find(id);
+			if (obj == null)
+			{
+				return NotFound();
+			}
+			_db.SurveyHeaders.Remove(obj);
+			await _db.SaveChangesAsync();
+			return RedirectToAction("Index");
+		}
     }
 }

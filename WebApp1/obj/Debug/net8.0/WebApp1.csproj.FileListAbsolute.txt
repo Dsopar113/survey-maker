@@ -286,4 +286,6 @@ C:\Users\Davor.Shopar\source\repos\WebApp1\WebApp1\bin\Debug\net8.0\runtimes\win
 C:\Users\Davor.Shopar\source\repos\WebApp1\WebApp1\bin\Debug\net8.0\runtimes\win-x64\native\e_sqlite3.dll
 C:\Users\Davor.Shopar\source\repos\WebApp1\WebApp1\bin\Debug\net8.0\runtimes\win-x86\native\e_sqlite3.dll
 C:\Users\Davor.Shopar\source\repos\WebApp1\WebApp1\obj\Debug\net8.0\WebApp1.sourcelink.json
-C:\Users\Davor.Shopar\source\repos\WebApp1\WebApp1\bin\Debug\net8.0\BeginCollectionItem.dll
+C:\Users\Davor.Shopar\source\repos\WebApp1\WebApp1\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
+C:\Users\Davor.Shopar\source\repos\WebApp1\WebApp1\bin\Debug\net8.0\MailKit.dll
+C:\Users\Davor.Shopar\source\repos\WebApp1\WebApp1\bin\Debug\net8.0\MimeKit.dll

@@ -224,47 +224,24 @@ namespace WebApp1.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("WebApp1.Models.Category", b =>
+            modelBuilder.Entity("WebApp1.Models.Participant", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("DisplayOrder")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("WebApp1.Models.Option", b =>
-                {
-                    b.Property<Guid>("OptionId")
+                    b.Property<Guid>("ParticipantId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("OptionText")
-                        .IsRequired()
+                    b.Property<string>("ParticipantLastName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("OptionValue")
-                        .HasColumnType("int");
+                    b.Property<string>("ParticipantMail")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("QuestionId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("ParticipantName")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("OptionId");
+                    b.HasKey("ParticipantId");
 
-                    b.HasIndex("QuestionId");
-
-                    b.ToTable("Options");
+                    b.ToTable("Participants");
                 });
 
             modelBuilder.Entity("WebApp1.Models.Question", b =>
@@ -272,6 +249,9 @@ namespace WebApp1.Data.Migrations
                     b.Property<Guid>("QuestionId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Answer")
+                        .HasColumnType("int");
 
                     b.Property<string>("QuestionContent")
                         .HasColumnType("nvarchar(max)");
@@ -301,6 +281,36 @@ namespace WebApp1.Data.Migrations
                     b.HasKey("SurveyId");
 
                     b.ToTable("SurveyHeaders");
+                });
+
+            modelBuilder.Entity("WebApp1.Models.SurveyHeader_Participant", b =>
+                {
+                    b.Property<Guid>("SurveyHeader_ParticipantId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsFinished")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("ParticipantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("SurveyHeaderSurveyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SurveyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("ValidTo")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("SurveyHeader_ParticipantId");
+
+                    b.HasIndex("ParticipantId");
+
+                    b.HasIndex("SurveyHeaderSurveyId");
+
+                    b.ToTable("SurveyHeaders_Participants");
                 });
 
             modelBuilder.Entity("WebApp1.Models.SurveySection", b =>
@@ -376,17 +386,6 @@ namespace WebApp1.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("WebApp1.Models.Option", b =>
-                {
-                    b.HasOne("WebApp1.Models.Question", "Question")
-                        .WithMany()
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Question");
-                });
-
             modelBuilder.Entity("WebApp1.Models.Question", b =>
                 {
                     b.HasOne("WebApp1.Models.SurveySection", null)
@@ -394,6 +393,19 @@ namespace WebApp1.Data.Migrations
                         .HasForeignKey("SurveySectionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("WebApp1.Models.SurveyHeader_Participant", b =>
+                {
+                    b.HasOne("WebApp1.Models.Participant", null)
+                        .WithMany("SurveyHeader_Participants")
+                        .HasForeignKey("ParticipantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebApp1.Models.SurveyHeader", null)
+                        .WithMany("SurveyHeader_Participants")
+                        .HasForeignKey("SurveyHeaderSurveyId");
                 });
 
             modelBuilder.Entity("WebApp1.Models.SurveySection", b =>
@@ -405,8 +417,15 @@ namespace WebApp1.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("WebApp1.Models.Participant", b =>
+                {
+                    b.Navigation("SurveyHeader_Participants");
+                });
+
             modelBuilder.Entity("WebApp1.Models.SurveyHeader", b =>
                 {
+                    b.Navigation("SurveyHeader_Participants");
+
                     b.Navigation("SurveySections");
                 });
 

@@ -1,0 +1,50 @@
+﻿@model List<SurveyHeader>
+
+@{
+	var participantId = ViewBag.ParticipantId;
+	var participantEmail = ViewBag.ParticipantEmail;
+	var assignedSurveys = ViewBag.AssignedSurveys as Dictionary<Guid, bool>;
+	var index = 0;
+}
+
+<h1>Survey List</h1>
+<h1>@participantId</h1>
+<table class="table table-bordered table-striped">
+	<thead>
+		<tr>
+			<th>Survey Name</th>
+			<th>Survey Description</th>
+			<th>Edit Survey</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var obj in Model)
+		{
+			var isAssigned = assignedSurveys.ContainsKey(obj.SurveyId) && assignedSurveys[obj.SurveyId];
+			<tr>
+				<td>@obj.SurveyName</td>
+				<td>@obj.SurveyDescription</td>
+				<td>
+				@if(!isAssigned)
+					{
+						<form asp-action="AssignToParticipant" method="post" class="d-inline" id="holder.@index">
+								<input type="hidden" name="surveyId" value="@obj.SurveyId" />
+								<input type="hidden" name="participantId" value="@participantId" />
+								<button type="submit" id="button.@index" class="btn btn-success mx-2">Assign to participant</button>
+						</form>
+					}
+				else
+                    {
+                        <span class="text-muted">Assigned</span>
+						<form asp-action="RemoveFromParticipant" method="post" class="d-inline" id="removeForm.@index">
+							<input type="hidden" name="surveyId" value="@obj.SurveyId" />
+							<input type="hidden" name="participantId" value="@participantId" />
+							<button type="submit" id="removeButton.@index" class="btn btn-danger mx-2">Remove from participant</button>
+						</form>
+                    }
+				</td>
+			</tr>
+			index++;
+		}
+	</tbody>
+</table>

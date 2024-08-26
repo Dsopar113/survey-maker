@@ -14,11 +14,13 @@ namespace WebApp1.Controllers
         {
             _db = db;
         }
+        [HttpGet]
         public IActionResult Index()
         {
 			List<SurveyHeader> objSurveyHeaderList = _db.SurveyHeaders.ToList();
 			return View(objSurveyHeaderList);
 		}
+        [HttpGet]
         public async Task<IActionResult> Fill(Guid? id)
         {
             if (id == null)
@@ -60,7 +62,6 @@ namespace WebApp1.Controllers
                     if (!question.Option.IsNullOrEmpty())
                     {
                         // Save the selected option value and the text (from the Options list) into the database
-                        var option = new Option
                         {
                             //OptionId = Guid.NewGuid(),
                             //OptionText = question.Options.FirstOrDefault(o => o.OptionValue == question.SelectedOption)?.OptionText,
@@ -76,6 +77,5 @@ namespace WebApp1.Controllers
             // Save other form data as needed
             return RedirectToAction("Index");
         }
-
     }
 }
